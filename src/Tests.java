@@ -23,26 +23,31 @@ public class Tests {
 		long avgBest = 0;
 		long avgWorst = 0;
 		
+		// Generate arrays
+		ArrayObject arrays = arrayGenerator.generate(arraySize);
+		int[] origArray = arrays.original;
+		int[] sortedArray = arrays.sorted;
+		int[] reverseArray = arrays.reverse;
+		
+		// Copy arrays, so as not to modify originals
+		int[] usableOArray = origArray.clone();
+		int[] usableSArray = sortedArray.clone();
+		int[] usableRArray = reverseArray.clone();
+		
+		// Print original array, sorted array, and reverse sorted array.
+		System.out.println("Original array (average input):\n" + Arrays.toString(origArray));
+		long duration = sorter.regSort(sortedArray);
+		System.out.println("Sorted array (best-case input):\n" + Arrays.toString(sortedArray));
+		//System.out.println("Time to sort: " + duration);
+		revSorter.revSort(reverseArray);
+		System.out.println("Reverse sorted array (worst-case input):\n" + Arrays.toString(reverseArray));
+		
 		// Run tests specified number of times
 		for (int i = 0; i < numTests; i++) {
-			// Generate arrays
-			ArrayObject arrays = arrayGenerator.generate(arraySize);
-			int[] origArray = arrays.original;
-			int[] sortedArray = arrays.sorted;
-			int[] reverseArray = arrays.reverse;
-			
-			// Print original array, sorted array, and reverse sorted array.
-			System.out.println("Original array (average input):\n" + Arrays.toString(origArray));
-			long duration = sorter.regSort(sortedArray);
-			System.out.println("Sorted array (best-case input):\n" + Arrays.toString(sortedArray));
-			//System.out.println("Time to sort: " + duration);
-			revSorter.revSort(reverseArray);
-			System.out.println("Reverse sorted array (worst-case input):\n" + Arrays.toString(reverseArray));
-			
 			// Sort each array
-			long avgSortTime = sorter.regSort(origArray);
-			long bestSortTime = sorter.regSort(sortedArray);
-			long worstSortTime = sorter.regSort(reverseArray);
+			long avgSortTime = sorter.regSort(usableOArray);
+			long bestSortTime = sorter.regSort(usableSArray);
+			long worstSortTime = sorter.regSort(usableRArray);
 			
 			// Print all times
 			System.out.println("\nAverage input: " + avgSortTime + "\tBest-case: " + bestSortTime
@@ -52,6 +57,11 @@ public class Tests {
 			avgRandom += avgSortTime;
 			avgBest += bestSortTime;
 			avgWorst += worstSortTime;
+			
+			// Re-clone original arrays for next test
+			usableOArray = origArray.clone();
+			usableSArray = sortedArray.clone();
+			usableRArray = reverseArray.clone();
 		}
 		
 		// Calculate and print average times
